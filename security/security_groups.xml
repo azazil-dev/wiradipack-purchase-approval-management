@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Module Category -->
+        <record id="module_category_purchase_approval" model="ir.module.category">
+            <field name="name">Purchase Approval</field>
+            <field name="description">User access level for Purchase Request and Approval Management</field>
+            <field name="sequence">25</field>
+        </record>
+
+        <!-- Group: Requester (User) -->
+        <record id="group_pr_user" model="res.groups">
+            <field name="name">User (Requester)</field>
+            <field name="category_id" ref="module_category_purchase_approval"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Can create, submit, revise, and cancel own Purchase Requests.</field>
+        </record>
+
+        <!-- Group: Supervisor -->
+        <record id="group_pr_supervisor" model="res.groups">
+            <field name="name">Supervisor</field>
+            <field name="category_id" ref="module_category_purchase_approval"/>
+            <field name="implied_ids" eval="[(4, ref('group_pr_user'))]"/>
+            <field name="comment">Can approve small amount Purchase Requests within own department.</field>
+        </record>
+
+        <!-- Group: Manager -->
+        <record id="group_pr_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_category_purchase_approval"/>
+            <field name="implied_ids" eval="[(4, ref('group_pr_supervisor'))]"/>
+            <field name="comment">Can approve medium amount Purchase Requests within own and child departments.</field>
+        </record>
+
+        <!-- Group: Director -->
+        <record id="group_pr_director" model="res.groups">
+            <field name="name">Director</field>
+            <field name="category_id" ref="module_category_purchase_approval"/>
+            <field name="implied_ids" eval="[(4, ref('group_pr_manager'))]"/>
+            <field name="comment">Can approve large amount Purchase Requests company-wide.</field>
+        </record>
+
+        <!-- Group: Purchasing Officer -->
+        <record id="group_pr_purchasing" model="res.groups">
+            <field name="name">Purchasing Officer</field>
+            <field name="category_id" ref="module_category_purchase_approval"/>
+            <field name="implied_ids" eval="[(4, ref('group_pr_user'))]"/>
+            <field name="comment">Can view approved PRs and create Purchase Orders.</field>
+        </record>
+
+        <!-- Group: Auditor / Internal Control -->
+        <record id="group_pr_auditor" model="res.groups">
+            <field name="name">Auditor</field>
+            <field name="category_id" ref="module_category_purchase_approval"/>
+            <field name="implied_ids" eval="[(4, ref('group_pr_user'))]"/>
+            <field name="comment">Can view all Purchase Requests, Approval History, and Audit Logs (read-only).</field>
+        </record>
+
+        <!-- Group: Administrator -->
+        <record id="group_pr_admin" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="module_category_purchase_approval"/>
+            <field name="implied_ids" eval="[
+                (4, ref('group_pr_director')),
+                (4, ref('group_pr_purchasing')),
+                (4, ref('group_pr_auditor'))
+            ]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+            <field name="comment">Full administrative access to manage approval rules, settings, and bypass configurations.</field>
+        </record>
+    </data>
+</odoo>
+

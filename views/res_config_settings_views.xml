@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_purchase_approval" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.purchase.approval</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Purchase Approval" string="Purchase Approval" name="purchase_approval_management">
+                    <block title="Approval Policy &amp; Rules" name="approval_policy_setting_container">
+                        <setting id="pr_approval_mode_setting" help="Determine whether approval requires highest level only or cumulative chain">
+                            <field name="pr_approval_mode" class="w-75"/>
+                        </setting>
+                        <setting id="enforce_pr_on_po_setting" help="Block confirming purchase orders that are not linked to approved purchase requests">
+                            <field name="enforce_pr_on_po"/>
+                        </setting>
+                        <setting id="pr_po_tolerance_setting" help="Maximum allowed percentage by which PO amount may exceed approved PR total">
+                            <field name="pr_po_tolerance" class="w-25"/>
+                            <span>%</span>
+                        </setting>
+                    </block>
+                    <block title="SLA &amp; Notification Settings" name="sla_setting_container">
+                        <setting id="pr_reminder_days_setting" help="Working days before sending reminder to current approver (0 to disable)">
+                            <field name="pr_reminder_days" class="w-25"/>
+                            <span>Days</span>
+                        </setting>
+                        <setting id="pr_escalation_days_setting" help="Working days before escalating pending request to higher authority (0 to disable)">
+                            <field name="pr_escalation_days" class="w-25"/>
+                            <span>Days</span>
+                        </setting>
+                        <setting id="pr_stale_draft_days_setting" help="Days before reminding user of unsubmitted draft requests">
+                            <field name="pr_stale_draft_days" class="w-25"/>
+                            <span>Days</span>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_purchase_approval_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'purchase_approval_management'}</field>
+    </record>
+</odoo>
+

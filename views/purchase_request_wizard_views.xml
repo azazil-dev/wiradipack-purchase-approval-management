@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wizard Reject Form -->
+    <record id="view_purchase_request_reject_wizard_form" model="ir.ui.view">
+        <field name="name">purchase.request.reject.wizard.form</field>
+        <field name="model">purchase.request.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Purchase Request">
+                <group>
+                    <field name="request_id" readonly="1"/>
+                    <field name="reason" placeholder="Please provide clear justification for rejection..." required="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_reject" string="Reject Request" type="object" class="btn-danger"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Make PO Form -->
+    <record id="view_purchase_request_make_po_wizard_form" model="ir.ui.view">
+        <field name="name">purchase.request.make.po.wizard.form</field>
+        <field name="model">purchase.request.make.po.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Purchase Order">
+                <group>
+                    <field name="request_id" readonly="1"/>
+                </group>
+                <notebook>
+                    <page string="Items to Order" name="wizard_lines">
+                        <field name="line_ids">
+                            <tree editable="bottom" create="false" delete="false">
+                                <field name="request_line_id" column_invisible="True"/>
+                                <field name="selected"/>
+                                <field name="product_id" force_save="1" readonly="1"/>
+                                <field name="name"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" force_save="1" readonly="1"/>
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="estimated_unit_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="partner_id" placeholder="Select Vendor"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_create_po" string="Generate Purchase Order" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Act Window Wizards -->
+    <record id="action_purchase_request_reject_wizard" model="ir.actions.act_window">
+        <field name="name">Reject Purchase Request</field>
+        <field name="res_model">purchase.request.reject.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_purchase_request_make_po_wizard" model="ir.actions.act_window">
+        <field name="name">Create Purchase Order</field>
+        <field name="res_model">purchase.request.make.po.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

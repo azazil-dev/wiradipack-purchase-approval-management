@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Approval History Tree -->
+    <record id="view_purchase_approval_history_tree" model="ir.ui.view">
+        <field name="name">purchase.approval.history.tree</field>
+        <field name="model">purchase.approval.history</field>
+        <field name="arch" type="xml">
+            <tree string="Approval History" create="false" edit="false" delete="false">
+                <field name="action_date"/>
+                <field name="request_id"/>
+                <field name="round_no"/>
+                <field name="actor_id"/>
+                <field name="level" widget="badge"/>
+                <field name="action" widget="badge"/>
+                <field name="state_from"/>
+                <field name="state_to"/>
+                <field name="amount_snapshot" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="comment"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Approval History Pivot & Graph -->
+    <record id="view_purchase_approval_history_pivot" model="ir.ui.view">
+        <field name="name">purchase.approval.history.pivot</field>
+        <field name="model">purchase.approval.history</field>
+        <field name="arch" type="xml">
+            <pivot string="Approval Analysis">
+                <field name="action" type="col"/>
+                <field name="level" type="row"/>
+                <field name="amount_snapshot" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_purchase_approval_history_graph" model="ir.ui.view">
+        <field name="name">purchase.approval.history.graph</field>
+        <field name="model">purchase.approval.history</field>
+        <field name="arch" type="xml">
+            <graph string="Approval Actions" type="bar">
+                <field name="action"/>
+                <field name="amount_snapshot" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Audit Log Tree -->
+    <record id="view_purchase_audit_log_tree" model="ir.ui.view">
+        <field name="name">purchase.audit.log.tree</field>
+        <field name="model">purchase.audit.log</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Audit Log" create="false" edit="false" delete="false" decoration-danger="event == 'unlink'" decoration-info="event == 'create'" decoration-warning="event == 'write'">
+                <field name="create_date"/>
+                <field name="user_id"/>
+                <field name="model_name"/>
+                <field name="res_id"/>
+                <field name="record_name"/>
+                <field name="event" widget="badge"/>
+                <field name="field_name"/>
+                <field name="old_value"/>
+                <field name="new_value"/>
+                <field name="ip_address"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_purchase_approval_history" model="ir.actions.act_window">
+        <field name="name">Approval History</field>
+        <field name="res_model">purchase.approval.history</field>
+        <field name="view_mode">tree,pivot,graph</field>
+    </record>
+
+    <record id="action_purchase_audit_log" model="ir.actions.act_window">
+        <field name="name">Audit Trail Logs</field>
+        <field name="res_model">purchase.audit.log</field>
+        <field name="view_mode">tree</field>
+    </record>
+</odoo>

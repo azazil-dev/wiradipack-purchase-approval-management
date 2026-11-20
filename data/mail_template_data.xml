@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Activity Type for Purchase Request Approval -->
+        <record id="mail_act_purchase_approval" model="mail.activity.type">
+            <field name="name">Purchase Request Approval</field>
+            <field name="icon">fa-check-square-o</field>
+            <field name="res_model">purchase.request</field>
+        </record>
+
+        <!-- Mail Template: To Approve (Sent to pending approver) -->
+        <record id="mail_tmpl_pr_to_approve" model="mail.template">
+            <field name="name">Purchase Request: Approval Needed</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="subject">Purchase Request Approval Needed: {{ object.name }} - {{ object.amount_total_formatted }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                    <p>Dear Approver,</p>
+                    <p>A purchase request requires your review and approval:</p>
+                    <ul>
+                        <li><strong>Reference:</strong> <t t-out="object.name"/></li>
+                        <li><strong>Requester:</strong> <t t-out="object.requester_id.name"/> (<t t-out="object.department_id.name or 'N/A'"/>)</li>
+                        <li><strong>Total Amount:</strong> <t t-out="object.amount_total_formatted"/></li>
+                        <li><strong>Required Level:</strong> <t t-out="object.required_level.title() if object.required_level else 'N/A'"/></li>
+                        <li><strong>Date Required:</strong> <t t-out="object.date_required"/></li>
+                        <li><strong>Reason:</strong> <t t-out="object.reason"/></li>
+                    </ul>
+                    <p>Please log in to review and take action on this request.</p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Mail Template: Approved (Sent to requester and purchasing) -->
+        <record id="mail_tmpl_pr_approved" model="mail.template">
+            <field name="name">Purchase Request: Approved</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="email_to">{{ object.requester_id.email_formatted }}</field>
+            <field name="subject">Purchase Request Approved: {{ object.name }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                    <p>Dear <t t-out="object.requester_id.name"/>,</p>
+                    <p>Good news! Your Purchase Request <strong><t t-out="object.name"/></strong> has been fully approved.</p>
+                    <p>The Purchasing team has been notified to proceed with generating the Purchase Order.</p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Mail Template: Rejected (Sent to requester) -->
+        <record id="mail_tmpl_pr_rejected" model="mail.template">
+            <field name="name">Purchase Request: Rejected</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="email_to">{{ object.requester_id.email_formatted }}</field>
+            <field name="subject">Purchase Request Rejected: {{ object.name }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                    <p>Dear <t t-out="object.requester_id.name"/>,</p>
+                    <p>Your Purchase Request <strong><t t-out="object.name"/></strong> was rejected.</p>
+                    <p><strong>Reason:</strong></p>
+                    <blockquote style="background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 10px; margin: 10px 0;">
+                        <t t-out="object.reject_reason"/>
+                    </blockquote>
+                    <p>You may review and revise this request from the system.</p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Mail Template: Reminder (SLA) -->
+        <record id="mail_tmpl_pr_reminder" model="mail.template">
+            <field name="name">Purchase Request: Pending Approval Reminder</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="subject">REMINDER: Pending Purchase Request Approval: {{ object.name }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                    <p>Dear Approver,</p>
+                    <p>This is an automated reminder that Purchase Request <strong><t t-out="object.name"/></strong> (Total: <t t-out="object.amount_total_formatted"/>) has been waiting for your approval for more than the SLA threshold.</p>
+                    <p>Please review and take action as soon as possible.</p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
+

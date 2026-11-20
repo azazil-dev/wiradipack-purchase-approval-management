@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_form_inherit_approval" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.approval</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Purchase Request reference to form header/fields -->
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="purchase_request_id" readonly="1" options="{'no_create': True}"/>
+            </xpath>
+
+            <!-- Add stat button to purchase order -->
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_purchase_request" icon="fa-file-text-o" invisible="not purchase_request_id">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Purchase</span>
+                        <span class="o_stat_text">Request</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

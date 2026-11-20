@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ===================================================================
+             1. DEPARTMENTS
+             =================================================================== -->
+        <record id="dep_manajemen" model="hr.department">
+            <field name="name">Manajemen</field>
+        </record>
+
+        <record id="dep_produksi" model="hr.department">
+            <field name="name">Produksi</field>
+        </record>
+
+        <record id="dep_gudang" model="hr.department">
+            <field name="name">Gudang</field>
+        </record>
+
+        <record id="dep_purchasing" model="hr.department">
+            <field name="name">Purchasing</field>
+        </record>
+
+        <record id="dep_internal_control" model="hr.department">
+            <field name="name">Internal Control</field>
+        </record>
+
+        <!-- ===================================================================
+             2. DEMO USERS & EMPLOYEES (PRD §16)
+             =================================================================== -->
+
+        <!-- 1. Budi (Requester - Produksi) -->
+        <record id="partner_budi_staff" model="res.partner">
+            <field name="name">Budi (Staff Produksi)</field>
+            <field name="email">budi.staff@example.com</field>
+        </record>
+        <record id="user_budi_staff" model="res.users">
+            <field name="name">Budi (Staff)</field>
+            <field name="login">budi.staff</field>
+            <field name="password">budi.staff</field>
+            <field name="partner_id" ref="partner_budi_staff"/>
+            <field name="groups_id" eval="[(6, 0, [
+                ref('base.group_user'),
+                ref('purchase_approval_management.group_pr_user')
+            ])]"/>
+        </record>
+        <record id="employee_budi_staff" model="hr.employee">
+            <field name="name">Budi</field>
+            <field name="user_id" ref="user_budi_staff"/>
+            <field name="department_id" ref="dep_produksi"/>
+            <field name="job_title">Staff Produksi</field>
+        </record>
+
+        <!-- 2. Siti (Supervisor - Produksi) -->
+        <record id="partner_siti_spv" model="res.partner">
+            <field name="name">Siti (Supervisor Produksi)</field>
+            <field name="email">siti.spv@example.com</field>
+        </record>
+        <record id="user_siti_spv" model="res.users">
+            <field name="name">Siti (Supervisor)</field>
+            <field name="login">siti.spv</field>
+            <field name="password">siti.spv</field>
+            <field name="partner_id" ref="partner_siti_spv"/>
+            <field name="groups_id" eval="[(6, 0, [
+                ref('base.group_user'),
+                ref('purchase_approval_management.group_pr_supervisor')
+            ])]"/>
+        </record>
+        <record id="employee_siti_spv" model="hr.employee">
+            <field name="name">Siti</field>
+            <field name="user_id" ref="user_siti_spv"/>
+            <field name="department_id" ref="dep_produksi"/>
+            <field name="job_title">Supervisor Produksi</field>
+        </record>
+
+        <!-- 3. Andi (Manager - Produksi) -->
+        <record id="partner_andi_mgr" model="res.partner">
+            <field name="name">Andi (Manager Produksi)</field>
+            <field name="email">andi.mgr@example.com</field>
+        </record>
+        <record id="user_andi_mgr" model="res.users">
+            <field name="name">Andi (Manager)</field>
+            <field name="login">andi.mgr</field>
+            <field name="password">andi.mgr</field>
+            <field name="partner_id" ref="partner_andi_mgr"/>
+            <field name="groups_id" eval="[(6, 0, [
+                ref('base.group_user'),
+                ref('purchase_approval_management.group_pr_manager')
+            ])]"/>
+        </record>
+        <record id="employee_andi_mgr" model="hr.employee">
+            <field name="name">Andi</field>
+            <field name="user_id" ref="user_andi_mgr"/>
+            <field name="department_id" ref="dep_produksi"/>
+            <field name="job_title">Manager Produksi</field>
+        </record>
+
+        <!-- Hubungkan Manager Departemen Produksi ke Andi -->
+        <record id="dep_produksi" model="hr.department">
+            <field name="manager_id" ref="employee_andi_mgr"/>
+        </record>
+
+        <!-- 4. Wiradi (Director - Manajemen) -->
+        <record id="partner_wiradi_dir" model="res.partner">
+            <field name="name">Wiradi (Direktur Utama)</field>
+            <field name="email">wiradi.dir@example.com</field>
+        </record>
+        <record id="user_wiradi_dir" model="res.users">
+            <field name="name">Wiradi (Director)</field>
+            <field name="login">wiradi.dir</field>
+            <field name="password">wiradi.dir</field>
+            <field name="partner_id" ref="partner_wiradi_dir"/>
+            <field name="groups_id" eval="[(6, 0, [
+                ref('base.group_user'),
+                ref('purchase_approval_management.group_pr_director')
+            ])]"/>
+        </record>
+        <record id="employee_wiradi_dir" model="hr.employee">
+            <field name="name">Wiradi</field>
+            <field name="user_id" ref="user_wiradi_dir"/>
+            <field name="department_id" ref="dep_manajemen"/>
+            <field name="job_title">Direktur Utama</field>
+        </record>
+
+        <!-- 5. Rina (Purchasing Officer - Purchasing) -->
+        <record id="partner_rina_purch" model="res.partner">
+            <field name="name">Rina (Purchasing Officer)</field>
+            <field name="email">rina.purch@example.com</field>
+        </record>
+        <record id="user_rina_purch" model="res.users">
+            <field name="name">Rina (Purchasing)</field>
+            <field name="login">rina.purch</field>
+            <field name="password">rina.purch</field>
+            <field name="partner_id" ref="partner_rina_purch"/>
+            <field name="groups_id" eval="[(6, 0, [
+                ref('base.group_user'),
+                ref('purchase.group_purchase_user'),
+                ref('purchase_approval_management.group_pr_purchasing')
+            ])]"/>
+        </record>
+        <record id="employee_rina_purch" model="hr.employee">
+            <field name="name">Rina</field>
+            <field name="user_id" ref="user_rina_purch"/>
+            <field name="department_id" ref="dep_purchasing"/>
+            <field name="job_title">Purchasing Officer</field>
+        </record>
+
+        <!-- 6. Dewi (Auditor - Internal Control) -->
+        <record id="partner_dewi_audit" model="res.partner">
+            <field name="name">Dewi (Auditor Internal)</field>
+            <field name="email">dewi.audit@example.com</field>
+        </record>
+        <record id="user_dewi_audit" model="res.users">
+            <field name="name">Dewi (Auditor)</field>
+            <field name="login">dewi.audit</field>
+            <field name="password">dewi.audit</field>
+            <field name="partner_id" ref="partner_dewi_audit"/>
+            <field name="groups_id" eval="[(6, 0, [
+                ref('base.group_user'),
+                ref('purchase_approval_management.group_pr_auditor')
+            ])]"/>
+        </record>
+        <record id="employee_dewi_audit" model="hr.employee">
+            <field name="name">Dewi</field>
+            <field name="user_id" ref="user_dewi_audit"/>
+            <field name="department_id" ref="dep_internal_control"/>
+            <field name="job_title">Internal Auditor</field>
+        </record>
+
+        <!-- 7. Eko (Supervisor - Gudang) -->
+        <record id="partner_eko_spv" model="res.partner">
+            <field name="name">Eko (Supervisor Gudang)</field>
+            <field name="email">eko.spv@example.com</field>
+        </record>
+        <record id="user_eko_spv" model="res.users">
+            <field name="name">Eko (Supervisor Gudang)</field>
+            <field name="login">eko.spv</field>
+            <field name="password">eko.spv</field>
+            <field name="partner_id" ref="partner_eko_spv"/>
+            <field name="groups_id" eval="[(6, 0, [
+                ref('base.group_user'),
+                ref('purchase_approval_management.group_pr_supervisor')
+            ])]"/>
+        </record>
+        <record id="employee_eko_spv" model="hr.employee">
+            <field name="name">Eko</field>
+            <field name="user_id" ref="user_eko_spv"/>
+            <field name="department_id" ref="dep_gudang"/>
+            <field name="job_title">Supervisor Gudang</field>
+        </record>
+
+        <!-- ===================================================================
+             3. DEMO PRODUCTS & VENDORS
+             =================================================================== -->
+        <record id="vendor_paper_mill" model="res.partner">
+            <field name="name">PT Surya Kertas Nusantara</field>
+            <field name="supplier_rank">1</field>
+            <field name="email">sales@suryakertas.com</field>
+        </record>
+
+        <record id="vendor_hardware_tech" model="res.partner">
+            <field name="name">PT Megah Komputindo Solusi</field>
+            <field name="supplier_rank">1</field>
+            <field name="email">sales@megahkomputindo.com</field>
+        </record>
+
+        <record id="product_kraft_paper" model="product.product">
+            <field name="name">Kertas Kraft Brown 150 GSM</field>
+            <field name="type">consu</field>
+            <field name="default_code">RAW-KRAFT-150</field>
+            <field name="standard_price">350000.0</field>
+        </record>
+
+        <record id="product_printing_ink" model="product.product">
+            <field name="name">Tinta Cetak Flexo Hitam (Pail 20kg)</field>
+            <field name="type">consu</field>
+            <field name="default_code">RAW-INK-BLK</field>
+            <field name="standard_price">1250000.0</field>
+        </record>
+
+        <record id="product_machine_bearing" model="product.product">
+            <field name="name">Heavy Duty Roller Bearing SKF 6205</field>
+            <field name="type">consu</field>
+            <field name="default_code">SP-SKF-6205</field>
+            <field name="standard_price">850000.0</field>
+        </record>
+
+        <record id="product_laptop_dev" model="product.product">
+            <field name="name">Laptop ThinkPad T14s Gen 4 (Operasional Produksi)</field>
+            <field name="type">consu</field>
+            <field name="default_code">IT-LPT-THINKPAD</field>
+            <field name="standard_price">35000000.0</field>
+        </record>
+
+        <record id="product_corrugator_belt" model="product.product">
+            <field name="name">Belt Seamless Mesin Corrugator 3500mm</field>
+            <field name="type">consu</field>
+            <field name="default_code">SP-CORR-BELT</field>
+            <field name="standard_price">85000000.0</field>
+        </record>
+
+        <!-- ===================================================================
+             4. 5 DATA DUMMY SIMULASI PURCHASE REQUESTS LENGKAP
+             =================================================================== -->
+
+        <!-- DATA 1: PR Nominal Kecil (Rp 3.400.000) -> Draft (Tingkat: Supervisor) -->
+        <record id="demo_pr_1_small_draft" model="purchase.request">
+            <field name="name">PR/2026/00001</field>
+            <field name="requester_id" ref="user_budi_staff"/>
+            <field name="department_id" ref="dep_produksi"/>
+            <field name="date_request" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="date_required" eval="(datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="reason">Penggantian darurat 4 pcs bearing mesin finishing box</field>
+            <field name="state">draft</field>
+        </record>
+
+        <record id="demo_pr_line_1" model="purchase.request.line">
+            <field name="request_id" ref="demo_pr_1_small_draft"/>
+            <field name="product_id" ref="product_machine_bearing"/>
+            <field name="name">Heavy Duty Roller Bearing SKF 6205</field>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="estimated_unit_price">850000.0</field>
+            <field name="suggested_vendor_id" ref="vendor_paper_mill"/>
+        </record>
+
+
+        <!-- DATA 2: PR Menengah - Pembelian Laptop (Rp 35.000.000) -> To Approve (Tingkat: Manager)
+             Pemohon: Budi (Staff Produksi), Approver yang Berhak: Andi (Manager Produksi) -->
+        <record id="demo_pr_2_laptop_to_approve" model="purchase.request">
+            <field name="name">PR/2026/00002</field>
+            <field name="requester_id" ref="user_budi_staff"/>
+            <field name="department_id" ref="dep_produksi"/>
+            <field name="date_request" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="date_required" eval="(datetime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="reason">Pengadaan Laptop untuk workstation input QC &amp; monitoring line produksi</field>
+            <field name="state">to_approve</field>
+            <field name="required_level">manager</field>
+        </record>
+
+        <record id="demo_pr_line_2" model="purchase.request.line">
+            <field name="request_id" ref="demo_pr_2_laptop_to_approve"/>
+            <field name="product_id" ref="product_laptop_dev"/>
+            <field name="name">Laptop ThinkPad T14s Gen 4 (Operasional Produksi)</field>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="estimated_unit_price">35000000.0</field>
+            <field name="suggested_vendor_id" ref="vendor_hardware_tech"/>
+        </record>
+
+        <record id="demo_pr_2_approval_line" model="purchase.request.approval.line">
+            <field name="request_id" ref="demo_pr_2_laptop_to_approve"/>
+            <field name="round_no">1</field>
+            <field name="sequence">10</field>
+            <field name="level">manager</field>
+            <field name="group_id" ref="group_pr_manager"/>
+            <field name="state">pending</field>
+        </record>
+
+        <record id="demo_pr_2_history_submit" model="purchase.approval.history">
+            <field name="request_id" ref="demo_pr_2_laptop_to_approve"/>
+            <field name="round_no">1</field>
+            <field name="level">manager</field>
+            <field name="action">submitted</field>
+            <field name="actor_id" ref="user_budi_staff"/>
+            <field name="state_from">draft</field>
+            <field name="state_to">to_approve</field>
+            <field name="amount_snapshot">35000000.0</field>
+            <field name="comment">Pengajuan disubmit oleh Budi untuk persetujuan Manager Andi.</field>
+        </record>
+
+
+        <!-- DATA 3: PR Menengah (Rp 25.000.000) -> Approved (Disetujui Andi / Manager) -->
+        <record id="demo_pr_3_medium_approved" model="purchase.request">
+            <field name="name">PR/2026/00003</field>
+            <field name="requester_id" ref="user_budi_staff"/>
+            <field name="department_id" ref="dep_produksi"/>
+            <field name="date_request" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="date_required" eval="(datetime.now() + timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="reason">Restock 20 pail tinta cetak hitam batch pesanan karton box Indofood</field>
+            <field name="state">approved</field>
+            <field name="required_level">manager</field>
+        </record>
+
+        <record id="demo_pr_line_3" model="purchase.request.line">
+            <field name="request_id" ref="demo_pr_3_medium_approved"/>
+            <field name="product_id" ref="product_printing_ink"/>
+            <field name="name">Tinta Cetak Flexo Hitam (Pail 20kg)</field>
+            <field name="product_qty">20</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="estimated_unit_price">1250000.0</field>
+            <field name="suggested_vendor_id" ref="vendor_paper_mill"/>
+        </record>
+
+        <record id="demo_pr_3_approval_line" model="purchase.request.approval.line">
+            <field name="request_id" ref="demo_pr_3_medium_approved"/>
+            <field name="round_no">1</field>
+            <field name="sequence">10</field>
+            <field name="level">manager</field>
+            <field name="group_id" ref="group_pr_manager"/>
+            <field name="state">approved</field>
+            <field name="approver_id" ref="user_andi_mgr"/>
+            <field name="action_date" eval="datetime.now()"/>
+            <field name="comment">Disetujui sesuai anggaran departemen produksi bulan ini.</field>
+        </record>
+
+        <record id="demo_pr_3_history" model="purchase.approval.history">
+            <field name="request_id" ref="demo_pr_3_medium_approved"/>
+            <field name="round_no">1</field>
+            <field name="level">manager</field>
+            <field name="action">approved</field>
+            <field name="actor_id" ref="user_andi_mgr"/>
+            <field name="state_from">to_approve</field>
+            <field name="state_to">approved</field>
+            <field name="amount_snapshot">25000000.0</field>
+            <field name="comment">Disetujui oleh Andi (Manager Produksi)</field>
+        </record>
+
+
+        <!-- DATA 4: PR Besar (Rp 85.000.000) -> To Approve (Tingkat: Director)
+             Pemohon: Budi, Menunggu Persetujuan: Wiradi (Direktur Utama) -->
+        <record id="demo_pr_4_large_to_approve" model="purchase.request">
+            <field name="name">PR/2026/00004</field>
+            <field name="requester_id" ref="user_budi_staff"/>
+            <field name="department_id" ref="dep_produksi"/>
+            <field name="date_request" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="date_required" eval="(datetime.now() + timedelta(days=20)).strftime('%Y-%m-%d')"/>
+            <field name="reason">Pengadaan belt seamless mesin corrugator utama dari distributor resmi</field>
+            <field name="state">to_approve</field>
+            <field name="required_level">director</field>
+        </record>
+
+        <record id="demo_pr_line_4" model="purchase.request.line">
+            <field name="request_id" ref="demo_pr_4_large_to_approve"/>
+            <field name="product_id" ref="product_corrugator_belt"/>
+            <field name="name">Belt Seamless Mesin Corrugator 3500mm</field>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="estimated_unit_price">85000000.0</field>
+            <field name="suggested_vendor_id" ref="vendor_paper_mill"/>
+        </record>
+
+        <record id="demo_pr_4_approval_line" model="purchase.request.approval.line">
+            <field name="request_id" ref="demo_pr_4_large_to_approve"/>
+            <field name="round_no">1</field>
+            <field name="sequence">10</field>
+            <field name="level">director</field>
+            <field name="group_id" ref="group_pr_director"/>
+            <field name="state">pending</field>
+        </record>
+
+        <record id="demo_pr_4_history" model="purchase.approval.history">
+            <field name="request_id" ref="demo_pr_4_large_to_approve"/>
+            <field name="round_no">1</field>
+            <field name="level">director</field>
+            <field name="action">submitted</field>
+            <field name="actor_id" ref="user_budi_staff"/>
+            <field name="state_from">draft</field>
+            <field name="state_to">to_approve</field>
+            <field name="amount_snapshot">85000000.0</field>
+            <field name="comment">Nominal &gt; 50 Juta diarahkan ke Direktur Utama (Wiradi).</field>
+        </record>
+
+
+        <!-- DATA 5: PR Ditolak (Rp 12.500.000) -> Rejected (Ditolak Manager dengan Alasan) -->
+        <record id="demo_pr_5_rejected" model="purchase.request">
+            <field name="name">PR/2026/00005</field>
+            <field name="requester_id" ref="user_budi_staff"/>
+            <field name="department_id" ref="dep_produksi"/>
+            <field name="date_request" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="date_required" eval="(datetime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="reason">Penambahan stok tinta cadangan non-prioritas</field>
+            <field name="state">rejected</field>
+            <field name="required_level">manager</field>
+            <field name="reject_reason">Stok tinta di gudang utama masih mencukupi hingga akhir bulan depan. Pengajuan ditunda ke periode berikutnya.</field>
+        </record>
+
+        <record id="demo_pr_line_5" model="purchase.request.line">
+            <field name="request_id" ref="demo_pr_5_rejected"/>
+            <field name="product_id" ref="product_printing_ink"/>
+            <field name="name">Tinta Cetak Flexo Hitam (Pail 20kg)</field>
+            <field name="product_qty">10</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="estimated_unit_price">1250000.0</field>
+            <field name="suggested_vendor_id" ref="vendor_paper_mill"/>
+        </record>
+
+        <record id="demo_pr_5_approval_line" model="purchase.request.approval.line">
+            <field name="request_id" ref="demo_pr_5_rejected"/>
+            <field name="round_no">1</field>
+            <field name="sequence">10</field>
+            <field name="level">manager</field>
+            <field name="group_id" ref="group_pr_manager"/>
+            <field name="state">rejected</field>
+            <field name="approver_id" ref="user_andi_mgr"/>
+            <field name="action_date" eval="datetime.now()"/>
+            <field name="comment">Stok tinta di gudang utama masih mencukupi hingga akhir bulan depan. Pengajuan ditunda ke periode berikutnya.</field>
+        </record>
+
+        <record id="demo_pr_5_history" model="purchase.approval.history">
+            <field name="request_id" ref="demo_pr_5_rejected"/>
+            <field name="round_no">1</field>
+            <field name="level">manager</field>
+            <field name="action">rejected</field>
+            <field name="actor_id" ref="user_andi_mgr"/>
+            <field name="state_from">to_approve</field>
+            <field name="state_to">rejected</field>
+            <field name="amount_snapshot">12500000.0</field>
+            <field name="comment">Ditolak oleh Andi (Manager Produksi) dengan alasan stok gudang masih ada.</field>
+        </record>
+
+    </data>
+</odoo>

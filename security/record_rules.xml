@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Multi-Company Rule: Purchase Request -->
+        <record id="rule_purchase_request_multicompany" model="ir.rule">
+            <field name="name">Purchase Request: Multi-Company</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <!-- Multi-Company Rule: Approval Rule -->
+        <record id="rule_purchase_approval_rule_multicompany" model="ir.rule">
+            <field name="name">Purchase Approval Rule: Multi-Company</field>
+            <field name="model_id" ref="model_purchase_approval_rule"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <!-- Multi-Company Rule: Request Lines -->
+        <record id="rule_purchase_request_line_multicompany" model="ir.rule">
+            <field name="name">Purchase Request Line: Multi-Company</field>
+            <field name="model_id" ref="model_purchase_request_line"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <!-- RR-01: Requester Rule (Only see own PRs or involved in approval) -->
+        <record id="rule_purchase_request_user" model="ir.rule">
+            <field name="name">Purchase Request: Requester Own</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="groups" eval="[(4, ref('group_pr_user'))]"/>
+            <field name="domain_force">[
+                '|', '|',
+                ('requester_id', '=', user.id),
+                ('pending_approver_ids', 'in', [user.id]),
+                ('approval_line_ids.approver_id', '=', user.id)
+            ]</field>
+        </record>
+
+        <!-- RR-02: Supervisor Rule (Own PRs, or same department, or pending approval, or approved/done) -->
+        <record id="rule_purchase_request_supervisor" model="ir.rule">
+            <field name="name">Purchase Request: Supervisor Department</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="groups" eval="[(4, ref('group_pr_supervisor'))]"/>
+            <field name="domain_force">[
+                '|', '|', '|',
+                ('requester_id', '=', user.id),
+                ('department_id', '=', user.employee_id.department_id.id),
+                ('pending_approver_ids', 'in', [user.id]),
+                ('approval_line_ids.approver_id', '=', user.id)
+            ]</field>
+        </record>
+
+        <!-- RR-03: Manager Rule (Own PRs, or department child_of, or pending approval, or approved/done) -->
+        <record id="rule_purchase_request_manager" model="ir.rule">
+            <field name="name">Purchase Request: Manager Department Hierarchical</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="groups" eval="[(4, ref('group_pr_manager'))]"/>
+            <field name="domain_force">[
+                '|', '|', '|',
+                ('requester_id', '=', user.id),
+                ('department_id', 'child_of', user.employee_id.department_id.id if user.employee_id.department_id else 0),
+                ('pending_approver_ids', 'in', [user.id]),
+                ('approval_line_ids.approver_id', '=', user.id)
+            ]</field>
+        </record>
+
+        <!-- RR-04: Director Rule (All PRs in company) -->
+        <record id="rule_purchase_request_director" model="ir.rule">
+            <field name="name">Purchase Request: Director All</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="groups" eval="[(4, ref('group_pr_director'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- RR-05: Purchasing Rule (Approved/Done PRs + Own PRs) -->
+        <record id="rule_purchase_request_purchasing" model="ir.rule">
+            <field name="name">Purchase Request: Purchasing Officer</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="groups" eval="[(4, ref('group_pr_purchasing'))]"/>
+            <field name="domain_force">[
+                '|',
+                ('requester_id', '=', user.id),
+                ('state', 'in', ['approved', 'done'])
+            ]</field>
+        </record>
+
+        <!-- RR-06: Auditor Rule (All PRs read-only) -->
+        <record id="rule_purchase_request_auditor" model="ir.rule">
+            <field name="name">Purchase Request: Auditor All</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="groups" eval="[(4, ref('group_pr_auditor'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Administrator Bypass Rule -->
+        <record id="rule_purchase_request_admin" model="ir.rule">
+            <field name="name">Purchase Request: Administrator All</field>
+            <field name="model_id" ref="model_purchase_request"/>
+            <field name="groups" eval="[(4, ref('group_pr_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- RR-08: Request Lines Follows PR Rule -->
+        <record id="rule_purchase_request_line_user" model="ir.rule">
+            <field name="name">Purchase Request Line: Follow Request Visibility</field>
+            <field name="model_id" ref="model_purchase_request_line"/>
+            <field name="groups" eval="[(4, ref('group_pr_user'))]"/>
+            <field name="domain_force">[('request_id', '!=', False)]</field>
+        </record>
+
+        <!-- RR-08: Approval Line Follows PR Rule -->
+        <record id="rule_purchase_request_approval_line_user" model="ir.rule">
+            <field name="name">Approval Line: Follow Request Visibility</field>
+            <field name="model_id" ref="model_purchase_request_approval_line"/>
+            <field name="groups" eval="[(4, ref('group_pr_user'))]"/>
+            <field name="domain_force">[('request_id', '!=', False)]</field>
+        </record>
+
+        <!-- RR-08: Approval History Follows PR Rule -->
+        <record id="rule_purchase_approval_history_user" model="ir.rule">
+            <field name="name">Approval History: Follow Request Visibility</field>
+            <field name="model_id" ref="model_purchase_approval_history"/>
+            <field name="groups" eval="[(4, ref('group_pr_user'))]"/>
+            <field name="domain_force">[('request_id', '!=', False)]</field>
+        </record>
+
+    </data>
+</odoo>
+

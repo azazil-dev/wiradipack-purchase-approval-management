@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top Level Menu -->
+    <menuitem id="menu_purchase_approval_root"
+              name="Purchase Approval"
+              web_icon="purchase_approval_management,static/description/icon.png"
+              sequence="25"/>
+
+    <!-- Section 1: Purchase Requests -->
+    <menuitem id="menu_purchase_request_main"
+              name="Purchase Requests"
+              parent="menu_purchase_approval_root"
+              sequence="10"/>
+
+    <menuitem id="menu_purchase_request_all"
+              name="All Requests"
+              parent="menu_purchase_request_main"
+              action="action_purchase_request_all"
+              sequence="10"/>
+
+    <menuitem id="menu_purchase_request_my"
+              name="My Requests"
+              parent="menu_purchase_request_main"
+              action="action_purchase_request_my"
+              sequence="20"/>
+
+    <menuitem id="menu_purchase_request_waiting_my_approval"
+              name="Waiting My Approval"
+              parent="menu_purchase_request_main"
+              action="action_purchase_request_waiting_my_approval"
+              sequence="30"/>
+
+    <!-- Section 2: Reporting -->
+    <menuitem id="menu_purchase_approval_reporting"
+              name="Reporting"
+              parent="menu_purchase_approval_root"
+              sequence="20"
+              groups="purchase_approval_management.group_pr_manager,purchase_approval_management.group_pr_director,purchase_approval_management.group_pr_auditor,purchase_approval_management.group_pr_admin"/>
+
+    <menuitem id="menu_purchase_approval_history"
+              name="Approval History"
+              parent="menu_purchase_approval_reporting"
+              action="action_purchase_approval_history"
+              sequence="10"/>
+
+    <menuitem id="menu_purchase_audit_log"
+              name="Audit Trail"
+              parent="menu_purchase_approval_reporting"
+              action="action_purchase_audit_log"
+              sequence="20"
+              groups="purchase_approval_management.group_pr_director,purchase_approval_management.group_pr_auditor,purchase_approval_management.group_pr_admin"/>
+
+    <!-- Section 3: Configuration -->
+    <menuitem id="menu_purchase_approval_config"
+              name="Configuration"
+              parent="menu_purchase_approval_root"
+              sequence="30"
+              groups="purchase_approval_management.group_pr_admin"/>
+
+    <menuitem id="menu_purchase_approval_rule"
+              name="Approval Rules"
+              parent="menu_purchase_approval_config"
+              action="action_purchase_approval_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_purchase_approval_settings"
+              name="Settings"
+              parent="menu_purchase_approval_config"
+              action="action_purchase_approval_config_settings"
+              sequence="20"/>
+</odoo>
+
